@@ -143,9 +143,9 @@ def train():
                     dev_summary_writer.add_summary(summaries, step)
 
                     time_str = datetime.datetime.now().isoformat()
-                    f1 = f1_score(np.argmax(y_dev, axis=1), predictions, labels=np.array(range(1, 19)), average="macro")
+                    f1 = f1_score(np.argmax(y_dev, axis=1), predictions, labels=np.array(range(0, 9)), average="macro")
                     print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
-                    print("[UNOFFICIAL] (2*9+1)-Way Macro-Average F1 Score (excluding Other): {:g}\n".format(f1))
+                    print("Macro-Average F1 Score: {:g}\n".format(f1))
 
                     # Model checkpoint
                     if best_f1 < f1:
