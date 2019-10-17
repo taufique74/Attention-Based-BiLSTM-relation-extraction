@@ -10,19 +10,6 @@ from configure import FLAGS
 def clean_str(text):
     text = text.lower()
     # Clean the text
-    text = re.sub(r"[^A-Za-z0-9^,!.\/'+-=]", " ", text)
-    text = re.sub(r"what's", "what is ", text)
-    text = re.sub(r"that's", "that is ", text)
-    text = re.sub(r"there's", "there is ", text)
-    text = re.sub(r"it's", "it is ", text)
-    text = re.sub(r"\'s", " ", text)
-    text = re.sub(r"\'ve", " have ", text)
-    text = re.sub(r"can't", "can not ", text)
-    text = re.sub(r"n't", " not ", text)
-    text = re.sub(r"i'm", "i am ", text)
-    text = re.sub(r"\'re", " are ", text)
-    text = re.sub(r"\'d", " would ", text)
-    text = re.sub(r"\'ll", " will ", text)
     text = re.sub(r",", " ", text)
     text = re.sub(r"\.", " ", text)
     text = re.sub(r"!", " ! ", text)
@@ -60,7 +47,7 @@ def load_data_and_labels(path):
         sentence = sentence.replace('<e2>', ' _e21_ ')
         sentence = sentence.replace('</e2>', ' _e22_ ')
 
-        sentence = clean_str(sentence)
+        #sentence = clean_str(sentence)
         tokens = nltk.word_tokenize(sentence)
         if max_sentence_length < len(tokens):
             max_sentence_length = len(tokens)
