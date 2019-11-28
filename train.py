@@ -16,8 +16,15 @@ warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWar
 
 
 def train():
+    # with tf.device('/cpu:0'):
+    #     x_text, y = data_helpers.load_data_and_labels(FLAGS.train_path)
+
     with tf.device('/cpu:0'):
-        x_text, y = data_helpers.load_data_and_labels(FLAGS.train_path)
+        train_text, y_train = data_helpers.load_data_and_labels('./train_data_cleanXX.txt')
+
+    with tf.device('/cpu:0'):
+        dev_text, y_dev = data_helpers.load_data_and_labels('./val_data_cleanXX.txt')
+
 
     # Build vocabulary
     # Example: x_text[3] = "A misty <e1>ridge</e1> uprises from the <e2>surge</e2>."
@@ -25,24 +32,37 @@ def train():
     # =>
     # [27 39 40 41 42  1 43  0  0 ... 0]
     # dimension = FLAGS.max_sentence_length
+    # vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(FLAGS.max_sentence_length)
+    # x = np.array(list(vocab_processor.fit_transform(x_text)))
+    # print("Text Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_)))
+    # print("x = {0}".format(x.shape))
+    # print("y = {0}".format(y.shape))
+    # print("")
+
+
     vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(FLAGS.max_sentence_length)
-    x = np.array(list(vocab_processor.fit_transform(x_text)))
-    print("Text Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_)))
-    print("x = {0}".format(x.shape))
-    print("y = {0}".format(y.shape))
-    print("")
+    vocab_processor.fit(train_text + dev_text)
+    x_train = np.array(list(vocab_processor.transform(train_text)))
+    x_dev = np.array(list(vocab_processor.transform(dev_text)))
+    # train_text = np.array(train_text)
+    # dev_text = np.array(dev_text)
+    print(f'\nText vocabulary size: {len(vocab_processor.vocabulary_)}')
+    print(f'train_x = {x_train.shape}')
+    print(f'train_y = {x_dev.shape}')
+    print(f'x_dev = {x_dev.shape}')
+    print(f'y_dev = {y_dev.shape}')
 
     # Randomly shuffle data to split into train and test(dev)
-    np.random.seed(10)
-    shuffle_indices = np.random.permutation(np.arange(len(y)))
-    x_shuffled = x[shuffle_indices]
-    y_shuffled = y[shuffle_indices]
+    # np.random.seed(10)
+    # shuffle_indices = np.random.permutation(np.arange(len(y)))
+    # x_shuffled = x[shuffle_indices]
+    # y_shuffled = y[shuffle_indices]
 
     # Split train/test set
     # TODO: This is very crude, should use cross-validation
-    dev_sample_index = -1 * int(FLAGS.dev_sample_percentage * float(len(y)))
-    x_train, x_dev = x_shuffled[:dev_sample_index], x_shuffled[dev_sample_index:]
-    y_train, y_dev = y_shuffled[:dev_sample_index], y_shuffled[dev_sample_index:]
+    # dev_sample_index = -1 * int(FLAGS.dev_sample_percentage * float(len(y_train)))
+    # x_train, x_dev = x_shuffled[:dev_sample_index], x_shuffled[dev_sample_index:]
+    # y_train, y_dev = y_shuffled[:dev_sample_index], y_shuffled[dev_sample_index:]
     print("Train/Dev split: {:d}/{:d}\n".format(len(y_train), len(y_dev)))
 
     with tf.Graph().as_default():
