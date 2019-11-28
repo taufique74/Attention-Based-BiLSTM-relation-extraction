@@ -8,27 +8,18 @@ from configure import FLAGS
 
 
 def clean_str(text):
-    text = text.lower()
     # Clean the text
-    text = re.sub(r",", " ", text)
-    text = re.sub(r"\.", " ", text)
     text = re.sub(r"!", " ! ", text)
     text = re.sub(r"\/", " ", text)
-    text = re.sub(r"\^", " ^ ", text)
     text = re.sub(r"\+", " + ", text)
-    text = re.sub(r"\-", " - ", text)
     text = re.sub(r"\=", " = ", text)
-    text = re.sub(r"'", " ", text)
-    text = re.sub(r"(\d+)(k)", r"\g<1>000", text)
-    text = re.sub(r":", " : ", text)
-    text = re.sub(r" e g ", " eg ", text)
-    text = re.sub(r" b g ", " bg ", text)
-    text = re.sub(r" u s ", " american ", text)
-    text = re.sub(r"\0s", "0", text)
-    text = re.sub(r" 9 11 ", "911", text)
-    text = re.sub(r"e - mail", "email", text)
-    text = re.sub(r"j k", "jk", text)
-    text = re.sub(r"\s{2,}", " ", text)
+    text = re.sub('\.', ' . ', text)
+    text = re.sub('।', ' । ', text)
+    text = re.sub(',', ' , ', text)
+    text = re.sub('\"', ' " ', text)
+    text = re.sub("\'", " ' ", text)
+    text = re.sub(':', ' : ', text)
+    text = re.sub('\?', ' ? ', text)
 
     return text.strip()
 
@@ -41,13 +32,13 @@ def load_data_and_labels(path):
         id = lines[idx].split("\t")[0]
         relation = lines[idx + 1]
 
-        sentence = lines[idx].split("\t")[1][1:-1]
+        sentence = lines[idx].split("\t")[1]
         sentence = sentence.replace('<e1>', ' _e11_ ')
         sentence = sentence.replace('</e1>', ' _e12_ ')
         sentence = sentence.replace('<e2>', ' _e21_ ')
         sentence = sentence.replace('</e2>', ' _e22_ ')
 
-        #sentence = clean_str(sentence)
+        sentence = clean_str(sentence)
         tokens = nltk.word_tokenize(sentence)
         if max_sentence_length < len(tokens):
             max_sentence_length = len(tokens)
