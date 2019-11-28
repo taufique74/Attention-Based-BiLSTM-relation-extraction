@@ -58,6 +58,12 @@ def train():
     # x_shuffled = x[shuffle_indices]
     # y_shuffled = y[shuffle_indices]
 
+    # shuffles data
+    np.random.seed(10)
+    shuffle_indices = np.random.permutation(np.arange(len(y)))
+    x_train = x_train[shuffle_indices]
+    y_train = y_train[shuffle_indices]
+
     # Split train/test set
     # TODO: This is very crude, should use cross-validation
     # dev_sample_index = -1 * int(FLAGS.dev_sample_percentage * float(len(y_train)))
